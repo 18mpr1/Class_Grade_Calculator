@@ -1,0 +1,8 @@
+Instructions
+
+1. Press the "Clear Data" button to clear any data that may be left over from previous use
+2. Enter in the course name (optional)
+3. Enter the maximum amount of students in the class and click "Submit"
+4. Enter in the required information and hit "Submit" each time
+
+The "See data" button will display everything typed in on another window

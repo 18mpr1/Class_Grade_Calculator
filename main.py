@@ -14,12 +14,6 @@ root.config(bg="#5DADE2")
 Title = Label(root, text="Grade Calculator", bg="#EC7063", height='1', font=("Georgia", 26, 'bold'))
 Title.grid(column=1, row=0)
 
-
-# <a href='https://www.freepik.com/photos/background'>Background photo created by lifeforstock - www.freepik.com</a>
-# img = PhotoImage(file="6709.ppm")
-# ImgLabel = Label(root,image=img,width='100',height='100')
-# ImgLabel.grid(column=0,row=1)
-
 class Student:
     def __init__(self, first_name, last_name, number, age, grade):
         self.first_name = first_name
@@ -54,7 +48,7 @@ class Course:
 count = 0
 
 
-def courseWindow(*args):
+def courseWindow():
     newWindow = Toplevel(root)
     newWindow.geometry('950x100')
     newWindow.config(bg='#D2FFFF')
@@ -89,10 +83,13 @@ def ClearData():
     entry3.delete(0, END)
     entry4.delete(0, END)
     entry5.delete(0, END)
-    filename = "data.csv"
+    filename1 = "data.csv"
     # opening the file with w+ mode truncates the file
-    f = open(filename, "w+")
+    f = open(filename1, "w+")
     f.close()
+    filename2 = "data2.csv"
+    g = open(filename2, "w+")
+    g.close()
 
 
 def AvgGrade(*args):
@@ -117,8 +114,8 @@ def AvgGrade(*args):
     average = gradeSum / len(s2)
     rAverage = float("{:.2f}".format(average))
     print(rAverage)
-    A = "The average grade is: " + str(rAverage)
-    print(A)
+    A = "The average grade is " + str(rAverage)
+    # Convert to letter grades
 
     aLabel = Label(aWindow,bg="#41062F",fg="#21FE11",text=A,font=('Georgia',24,'bold'))
     aLabel.pack()
@@ -131,9 +128,12 @@ def onClick(*args):
     global count
     # CSV
     with open('data.csv', mode='a') as names_file:
-        names_writer = csv.writer(names_file, delimiter=',', quotechar='"', lineterminator='',
+        names_writer = csv.writer(names_file, delimiter=',', quotechar='"', lineterminator=',',
                                   quoting=csv.QUOTE_MINIMAL)
-        # names_writer.writerow(['Course Name','Max number of students','First Name', 'Last Name','Student Number','Age','Grade'])
+        names_writer.writerow([entry2.get(), entry1.get(), entry3.get(), entry4.get(), entry5.get()])
+    with open('data2.csv', mode='a') as names_file:
+        names_writer = csv.writer(names_file, delimiter=',', quotechar='"', lineterminator='\n',
+                                  quoting=csv.QUOTE_MINIMAL)
         names_writer.writerow([entry2.get(), entry1.get(), entry3.get(), entry4.get(), entry5.get()])
     print(count)
     n = int(Course.max_students)
@@ -154,13 +154,21 @@ def DataWindow(*args):
     dWindow.config(bg='#1F1086')
     # Read csv file info and send it to the DataWindow
     # open file in read mode
-    with open('data.csv', 'r') as f:
+    with open('data2.csv', 'r') as f:
         reader = csv.reader(f)
         for row in reader:
             # print(row)
             DataLabel = Label(dWindow, text=row, bg='#1F1086', fg="yellow", font=('Georgia', 12, 'bold'))
             DataLabel.pack()
 
+def Instructions():
+    iWindow = Toplevel(root)
+    iWindow.geometry('1000x200')
+    iWindow.config(bg='#C5BDEE')
+    with open('HowToUseThis.txt', 'r') as file:
+        data = file.read()
+    iLabel = Label(iWindow,text=data,bg='#C5BDEE',fg='#0B350B',font=('Georgia',14,'bold'))
+    iLabel.pack()
 
 Label1 = Label(root, text="Enter first name:", height='1', width='18', font=("Georgia", 16, 'bold'), bg='#D2FFFF',
                anchor='e')
@@ -197,9 +205,11 @@ entry5 = Entry(root, font=("Georgia", 17, 'bold'), width=20, bg='#D2FFFF', relie
 entry5.grid(column=1, row=6)
 
 # Buttons
-C_Label = Button(root, text="Add course information", font=("Georgia", 10, 'bold'), height=1, fg='#6200A5',
-                 bg='#C5F2C4', command=courseWindow)
-C_Label.grid(column=0, row=1)
+#C_Label = Button(root, text="Add course information", font=("Georgia", 10, 'bold'), height=1, fg='#6200A5',bg='#C5F2C4', command=courseWindow)
+#C_Label.grid(column=0, row=1)
+
+instructionsButton = Button(root,text="Instructions",font=('Georgia',10,'bold'),fg='#E56704',bg='#D2FFFF',command=Instructions)
+instructionsButton.grid(column=0,row=0)
 
 button1 = Button(root, text="Submit", font=("Georgia", 17, 'bold'), fg='#187D06', bg='#D2FFFF', command=onClick)
 button1.grid(column=1, row=7, sticky=E)
@@ -220,6 +230,6 @@ button4.grid(column=0, row=10)
 
 # while in the range of max students, the button can only be clicked that many times before it is disabled
 # use a value to check if button is pressed
-
+courseWindow()
 
 root.mainloop()
